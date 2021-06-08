@@ -34,22 +34,9 @@ type GslbSpec struct {
 }
 
 type Backend struct {
-	URL              string    `json:"url,omitempty"`
-	Weight           string    `json:"weight,omitempty"`
-	PeriodSeconds    int       `json:"periodSeconds,omitempty"`
-	TimeoutSeconds   int       `json:"timeoutSeconds,omitempty"`
-	FailureThreshold int       `json:"failureThreshold,omitempty"`
-	SuccessThreshold int       `json:"successThreshold,omitempty"`
-	HTTPGet          HTTPGet   `json:"httpGet,omitempty"`
-	TCPSocket        TCPSocket `json:"tcpSocket,omitempty"`
-}
-
-type HTTPGet struct {
-	Path string `json:"path,omitempty"`
-}
-
-type TCPSocket struct {
-	Port int `json:"port,omitempty"`
+	Domain string `json:"domain,omitempty"`
+	Weight string `json:"weight,omitempty"`
+	Probe  Probe  `json:"probe,omitempty"`
 }
 
 // GslbStatus defines the observed state of Gslb
