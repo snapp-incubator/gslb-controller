@@ -6,9 +6,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: gslbs.cache.snappcloud.io
+  name: gslbs.gslb.snappcloud.io
 spec:
-  group: cache.snappcloud.io
+  group: gslb.snappcloud.io
   names:
     kind: Gslb
     listKind: GslbList

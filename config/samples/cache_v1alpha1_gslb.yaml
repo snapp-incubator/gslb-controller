@@ -1,4 +1,4 @@
-apiVersion: cache.snappcloud.io/v1alpha1
+apiVersion: gslb.snappcloud.io/v1alpha1
 kind: Gslb
 metadata:
   name: gslb-sample

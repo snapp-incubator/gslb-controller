@@ -12,7 +12,7 @@ resources:
     namespaced: true
   controller: true
   domain: snappcloud.io
-  group: cache
+  group: gslb
   kind: Gslb
   path: github.com/snapp-cab/gslb-controller/api/v1alpha1
   version: v1alpha1
