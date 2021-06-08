@@ -1,0 +1,20 @@
+# permissions for end users to view gslbs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gslb-viewer-role
+rules:
+- apiGroups:
+  - cache.snappcloud.io
+  resources:
+  - gslbs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cache.snappcloud.io
+  resources:
+  - gslbs/status
+  verbs:
+  - get
