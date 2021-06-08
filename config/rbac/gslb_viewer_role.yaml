@@ -5,7 +5,7 @@ metadata:
   name: gslb-viewer-role
 rules:
 - apiGroups:
-  - cache.snappcloud.io
+  - gslb.snappcloud.io
   resources:
   - gslbs
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - cache.snappcloud.io
+  - gslb.snappcloud.io
   resources:
   - gslbs/status
   verbs:

@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	cachev1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
+	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
 )
 
 // GslbReconciler reconciles a Gslb object
@@ -33,9 +33,9 @@ type GslbReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=cache.snappcloud.io,resources=gslbs,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=cache.snappcloud.io,resources=gslbs/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=cache.snappcloud.io,resources=gslbs/finalizers,verbs=update
+//+kubebuilder:rbac:groups=gslb.snappcloud.io,resources=gslbs,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=gslb.snappcloud.io,resources=gslbs/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=gslb.snappcloud.io,resources=gslbs/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -57,6 +57,6 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 // SetupWithManager sets up the controller with the Manager.
 func (r *GslbReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&cachev1alpha1.Gslb{}).
+		For(&gslbv1alpha1.Gslb{}).
 		Complete(r)
 }

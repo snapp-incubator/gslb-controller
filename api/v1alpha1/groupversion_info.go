@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 contains API Schema definitions for the cache v1alpha1 API group
+// Package v1alpha1 contains API Schema definitions for the gslb v1alpha1 API group
 //+kubebuilder:object:generate=true
-//+groupName=cache.snappcloud.io
+//+groupName=gslb.snappcloud.io
 package v1alpha1
 
 import (
@@ -26,7 +26,7 @@ import (
 
 var (
 	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "cache.snappcloud.io", Version: "v1alpha1"}
+	GroupVersion = schema.GroupVersion{Group: "gslb.snappcloud.io", Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
