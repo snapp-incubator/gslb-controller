@@ -2,6 +2,8 @@
 FROM golang:1.16 as builder
 
 WORKDIR /workspace
+ENV http_proxy=http://snapp-mirror:TmfBZb68qjGGF6feBdqX@mirror-fra-1.snappcloud.io:30128
+ENV https_proxy=http://snapp-mirror:TmfBZb68qjGGF6feBdqX@mirror-fra-1.snappcloud.io:30128
 # Copy the Go Modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
