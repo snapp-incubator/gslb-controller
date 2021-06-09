@@ -35,7 +35,7 @@ type GslbSpec struct {
 
 type Backend struct {
 	Name   string `json:"name,omitempty"`
-	Host   string `json:"domain,omitempty"`
+	Host   string `json:"host,omitempty"`
 	Weight string `json:"weight,omitempty"`
 	Probe  Probe  `json:"probe,omitempty"`
 }

@@ -31,7 +31,7 @@ func init() {
 }
 
 func GetGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) (*gslbv1alpha1.Gslb, error) {
-	catsvcList, _, err := consul.cat.Service(gslb.Name, "", &consulapi.QueryOptions{})
+	catsvcList, _, err := consul.cat.Service(gslb.Spec.ServiceName, "", &consulapi.QueryOptions{})
 	if err != nil {
 		return gslb, fmt.Errorf("failed to query consul for servic: %w", err)
 	}
@@ -75,11 +75,12 @@ func CreateOrUpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
 			},
 			Checks: consulapi.HealthChecks{
 				&consulapi.HealthCheck{
-					Name: "http-check",
+					Name:   "http-check",
+					Status: "passing",
 					Definition: consulapi.HealthCheckDefinition{
 						HTTP:             probeHost,
-						IntervalDuration: time.Duration(b.Probe.PeriodSeconds),
-						TimeoutDuration:  time.Duration(b.Probe.TimeoutSeconds),
+						IntervalDuration: time.Duration(b.Probe.PeriodSeconds) * time.Second,
+						TimeoutDuration:  time.Duration(b.Probe.TimeoutSeconds) * time.Second,
 						Header:           header,
 					},
 				},

@@ -39,7 +39,7 @@ spec:
               backends:
                 items:
                   properties:
-                    domain:
+                    host:
                       type: string
                     name:
                       type: string
