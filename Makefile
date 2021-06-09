@@ -36,7 +36,7 @@ IMAGE_TAG_BASE ?= snappcloud.io/gslb-controller
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
 # Image URL to use all building/pushing image targets
-IMG ?= docker.io/spc35771/gslb-controller:latest
+IMG ?= registry.okd4.teh-1.snappcloud.io/public-reg/gslb-controller:latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 
