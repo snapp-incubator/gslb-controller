@@ -29,12 +29,13 @@ type GslbSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Foo is an example field of Gslb. Edit gslb_types.go to remove/update
-	Host     string    `json:"host,omitempty"`
-	Backends []Backend `json:"backends,omitempty"`
+	ServiceName string    `json:"serviceName,omitempty"`
+	Backends    []Backend `json:"backends,omitempty"`
 }
 
 type Backend struct {
-	Domain string `json:"domain,omitempty"`
+	Name   string `json:"name,omitempty"`
+	Host   string `json:"host,omitempty"`
 	Weight string `json:"weight,omitempty"`
 	Probe  Probe  `json:"probe,omitempty"`
 }
