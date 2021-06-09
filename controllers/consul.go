@@ -19,7 +19,7 @@ func init() {
 	config := &consulapi.Config{
 		Address:    "consul.apps.private.okd4.teh-1.snappcloud.io",
 		Scheme:     "http",
-		Datacenter: "teh-1",
+		Datacenter: "teh1",
 	}
 	client, err := consulapi.NewClient(config)
 	if err != nil {

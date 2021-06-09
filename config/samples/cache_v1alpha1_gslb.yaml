@@ -2,6 +2,20 @@ apiVersion: gslb.snappcloud.io/v1alpha1
 kind: Gslb
 metadata:
   name: gslb-sample
+  namespace: abar-internal
 spec:
-  # Add fields here
-  foo: bar
+  host: hi.service.teh-1-ha
+  backends:
+  - domain: google.com
+    weight: 1
+    probe:
+      failureThreshold: 10
+      httpGet:
+        host: google.com
+        path: /
+        port: 80
+        scheme: HTTP
+      initialDelaySeconds: 3
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 3    
