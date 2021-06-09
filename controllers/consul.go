@@ -62,6 +62,7 @@ func CreateOrUpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
 		for _, h := range b.Probe.HTTPGet.HTTPHeaders {
 			header[h.Name] = []string{h.Value}
 		}
+		// TODO
 		// var probePrefix string
 		// switch b.Probe.HTTPGet.Scheme {
 		// case "HTTP", "http":
@@ -85,6 +86,7 @@ func CreateOrUpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
 					Name:   "http-check",
 					Status: "passing",
 					Definition: consulapi.HealthCheckDefinition{
+						// TODO
 						// HTTP: probePrefix + probeHost + b.Probe.HTTPGet.Path
 						HTTP:             probeHost,
 						IntervalDuration: time.Duration(b.Probe.PeriodSeconds) * time.Second,
