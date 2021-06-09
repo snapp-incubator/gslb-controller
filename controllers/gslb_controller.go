@@ -85,6 +85,7 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	// Ensure the gslb service status with the desired state
 	if !reflect.DeepEqual(currentGslb, gslb) {
+		log.Info("Updating the gslb service", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 		err := UpdateGslb(ctx, gslb)
 		if err != nil {
 			log.Error(err, "Failed to update the gslb service", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
@@ -92,18 +93,6 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		}
 	}
 	return ctrl.Result{}, nil
-}
-
-func GetGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) (*gslbv1alpha1.Gslb, error) {
-	return gslb, nil
-}
-
-func CreateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
-	return nil
-}
-
-func UpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
-	return nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
