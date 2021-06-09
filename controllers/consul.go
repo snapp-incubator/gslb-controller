@@ -33,7 +33,7 @@ func init() {
 func GetGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) (*gslbv1alpha1.Gslb, error) {
 	catsvcList, _, err := consul.cat.Service(gslb.Spec.ServiceName, "", &consulapi.QueryOptions{})
 	if err != nil {
-		return gslb, fmt.Errorf("failed to query consul for servic: %w", err)
+		return gslb, fmt.Errorf("failed to query consul for service: %w", err)
 	}
 	if len(catsvcList) == 0 {
 		return gslb, fmt.Errorf("NotFound")

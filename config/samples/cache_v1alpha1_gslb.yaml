@@ -4,7 +4,7 @@ metadata:
   name: gslb-sample
   namespace: abar-internal
 spec:
-  serviceNmae: hello
+  serviceName: hello
   backends:
   - name: private-teh-1
     host: 10.21.232.2
