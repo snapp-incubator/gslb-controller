@@ -4,18 +4,18 @@ metadata:
   name: gslb-sample
   namespace: abar-internal
 spec:
-  host: hi.service.teh-1-ha
+  serviceNmae: hello
   backends:
-  - domain: google.com
+  - host: google.com
     weight: 1
     probe:
-      failureThreshold: 10
+      failureThreshold: 10 #
       httpGet:
         host: google.com
         path: /
-        port: 80
-        scheme: HTTP
-      initialDelaySeconds: 3
+        port: 80 #
+        scheme: HTTP #
+      initialDelaySeconds: 3 #
       periodSeconds: 5
-      successThreshold: 1
+      successThreshold: 1 #
       timeoutSeconds: 3    

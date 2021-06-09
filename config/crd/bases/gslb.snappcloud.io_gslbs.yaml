@@ -41,6 +41,8 @@ spec:
                   properties:
                     domain:
                       type: string
+                    name:
+                      type: string
                     probe:
                       description: Probe describes a health check to be performed
                         against a container to determine whether it is alive or ready
@@ -162,7 +164,7 @@ spec:
                       type: string
                   type: object
                 type: array
-              host:
+              serviceName:
                 description: Foo is an example field of Gslb. Edit gslb_types.go to
                   remove/update
                 type: string
