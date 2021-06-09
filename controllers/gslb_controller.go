@@ -69,7 +69,7 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	// Check if the service already exists, if not create a new one
 	currentGslb, err := GetGslb(ctx, gslb)
-	if err != nil && errors.IsNotFound(err) {
+	if err != nil && err.Error() == "NotFound" {
 		log.Info("Creating a new gslb service", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 		err = CreateGslb(ctx, gslb)
 		if err != nil {
