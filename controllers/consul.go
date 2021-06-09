@@ -62,6 +62,13 @@ func CreateOrUpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
 		for _, h := range b.Probe.HTTPGet.HTTPHeaders {
 			header[h.Name] = []string{h.Value}
 		}
+		// var probePrefix string
+		// switch b.Probe.HTTPGet.Scheme {
+		// case "HTTP", "http":
+		// 	probePrefix = "http://"
+		// case "HTTPS", "https":
+		// 	probePrefix = "https://"
+		// }
 		reg := &consulapi.CatalogRegistration{
 			Node:    gslb.Namespace + "-" + gslb.Name + "-" + b.Name,
 			Address: b.Host,
@@ -78,6 +85,7 @@ func CreateOrUpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
 					Name:   "http-check",
 					Status: "passing",
 					Definition: consulapi.HealthCheckDefinition{
+						// HTTP: probePrefix + probeHost + b.Probe.HTTPGet.Path
 						HTTP:             probeHost,
 						IntervalDuration: time.Duration(b.Probe.PeriodSeconds) * time.Second,
 						TimeoutDuration:  time.Duration(b.Probe.TimeoutSeconds) * time.Second,

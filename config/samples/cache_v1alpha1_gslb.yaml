@@ -5,21 +5,22 @@ metadata:
   namespace: abar-internal
 spec:
   serviceName: hello
+  # strategy: roundrobin, failover
   backends:
   - name: private-teh-1
     host: 10.21.232.2
-    weight: "1"
+    weight: "1" #
     probe:
-      failureThreshold: 10 #
       httpGet:
         host: http://spcld-health2-be.apps.private.teh-1.snappcloud.io
-        path: /
+        path: / # easy
         port: 80 #
-        scheme: HTTP #
-      initialDelaySeconds: 3 #
+        scheme: HTTP # easy
       periodSeconds: 5
+      timeoutSeconds: 3
+      initialDelaySeconds: 3 # start critical?
+      failureThreshold: 10 #
       successThreshold: 1 #
-      timeoutSeconds: 3    
   - name: private-teh-2
     host: 10.22.232.2
     weight: "1"
@@ -33,7 +34,7 @@ spec:
       initialDelaySeconds: 3 #
       periodSeconds: 5
       successThreshold: 1 #
-      timeoutSeconds: 3    
+      timeoutSeconds: 3
   - name: svc-lb-teh-1
     host: 172.21.56.15
     weight: "1"
@@ -47,7 +48,7 @@ spec:
       initialDelaySeconds: 3 #
       periodSeconds: 5
       successThreshold: 1 #
-      timeoutSeconds: 3    
+      timeoutSeconds: 3
   - name: svc-lb-teh-2
     host: 172.16.56.5
     weight: "1"
@@ -61,4 +62,4 @@ spec:
       initialDelaySeconds: 3 #
       periodSeconds: 5
       successThreshold: 1 #
-      timeoutSeconds: 3    
+      timeoutSeconds: 3
