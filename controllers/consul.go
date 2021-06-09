@@ -104,3 +104,16 @@ func CreateOrUpdateGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
 
 	return nil
 }
+
+func DeleteGslb(ctx context.Context, gslb *gslbv1alpha1.Gslb) error {
+	for _, b := range gslb.Spec.Backends {
+		dereg := &consulapi.CatalogDeregistration{
+			Node: gslb.Namespace + "-" + gslb.Name + "-" + b.Name,
+		}
+		_, err := consul.cat.Deregister(dereg, &consulapi.WriteOptions{})
+		if err != nil {
+			return fmt.Errorf("failed to delete consul service: %w", err)
+		}
+	}
+	return nil
+}

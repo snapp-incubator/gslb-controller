@@ -24,8 +24,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	ctrllog "sigs.k8s.io/controller-runtime/pkg/log"
 
+	"github.com/go-logr/logr"
 	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
 )
 
@@ -34,6 +36,8 @@ type GslbReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
+
+const gslbFinalizer = "gslb.snappcloud.io/finalizer"
 
 //+kubebuilder:rbac:groups=gslb.snappcloud.io,resources=gslbs,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=gslb.snappcloud.io,resources=gslbs/status,verbs=get;update;patch
@@ -65,6 +69,33 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		// Error reading the object - requeue the request.
 		log.Error(err, "Failed to get Routes")
 		return ctrl.Result{}, err
+	}
+	// Check if the gslb instance is marked to be deleted, which is
+	// indicated by the deletion timestamp being set.
+	if gslb.GetDeletionTimestamp() != nil {
+		// Run finalization logic for gslbFinalizer. If the
+		// finalization logic fails, don't remove the finalizer so
+		// that we can retry during the next reconciliation.
+		if err := r.finalizeGslb(ctx, log, gslb); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		// Remove gslbFinalizer. Once all finalizers have been
+		// removed, the object will be deleted.
+		controllerutil.RemoveFinalizer(gslb, gslbFinalizer)
+		err := r.Update(ctx, gslb)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	// Add finalizer for this CR
+	if !controllerutil.ContainsFinalizer(gslb, gslbFinalizer) {
+		controllerutil.AddFinalizer(gslb, gslbFinalizer)
+		err = r.Update(ctx, gslb)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
 	}
 
 	// Check if the service already exists, if not create a new one
@@ -100,4 +131,14 @@ func (r *GslbReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&gslbv1alpha1.Gslb{}).
 		Complete(r)
+}
+
+func (r *GslbReconciler) finalizeGslb(ctx context.Context, reqLogger logr.Logger, gslb *gslbv1alpha1.Gslb) error {
+	reqLogger.Info("Deleting the gslb service", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
+	err := DeleteGslb(ctx, gslb)
+	if err != nil {
+		return err
+	}
+	reqLogger.Info("Successfully deleted and finalized gslb")
+	return nil
 }
