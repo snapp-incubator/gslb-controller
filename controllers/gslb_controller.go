@@ -137,6 +137,7 @@ func (r *GslbReconciler) finalizeGslb(ctx context.Context, reqLogger logr.Logger
 	reqLogger.Info("Deleting the gslb service", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 	err := DeleteGslb(ctx, gslb)
 	if err != nil {
+		reqLogger.Error(err, "Failed to delete the gslb service", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 		return err
 	}
 	reqLogger.Info("Successfully deleted and finalized gslb")

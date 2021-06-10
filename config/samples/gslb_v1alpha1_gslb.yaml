@@ -4,61 +4,52 @@ metadata:
   name: gslb-sample
   namespace: abar-internal
 spec:
-  serviceName: hello
+  serviceName: learn
   # strategy: roundrobin, failover
   backends:
   - name: private-teh-1
-    host: 10.21.232.2
-    weight: "1" #
+    host: spcld-health2-be.apps.private.teh-1.snappcloud.io
+    weight: "1" # TODO: implement logic
     probe:
       httpGet:
-        host: http://spcld-health2-be.apps.private.teh-1.snappcloud.io
-        path: / # easy
-        port: 80 #
-        scheme: HTTP # easy
+        host: "spcld-health2-be.apps.private.teh-1.snappcloud.io" # (optional) default to .spec.backends[].host
+        path: / # (optional) default to "/"
+        port: 80 # (optional) default based on scheme: 80 for http, 443 for https
+        scheme: http # (optional) valid values: ["http", "http", "httpS", "https"], default to http
       periodSeconds: 5
       timeoutSeconds: 3
-      initialDelaySeconds: 3 # start critical?
-      failureThreshold: 10 #
-      successThreshold: 1 #
+      initialDelaySeconds: 3 # TODO: implement logic: start critical?
+      failureThreshold: 3
+      successThreshold: 1
   - name: private-teh-2
-    host: 10.22.232.2
+    host: spcld-health2-be.apps.private.teh-2.snappcloud.io
     weight: "1"
     probe:
-      failureThreshold: 10 #
-      httpGet:
-        host: http://spcld-health2-be.apps.private.teh-2.snappcloud.io
-        path: /
-        port: 80 #
-        scheme: HTTP #
-      initialDelaySeconds: 3 #
-      periodSeconds: 5
-      successThreshold: 1 #
-      timeoutSeconds: 3
+      httpGet: {}
   - name: svc-lb-teh-1
-    host: 172.21.56.15
+    host: "172.21.56.15"
     weight: "1"
     probe:
-      failureThreshold: 10 #
+      failureThreshold: 3
       httpGet:
-        host: http://172.21.56.15
+        host: "172.21.56.15"
         path: /
         port: 80 #
-        scheme: HTTP #
+        scheme: http #
       initialDelaySeconds: 3 #
       periodSeconds: 5
       successThreshold: 1 #
       timeoutSeconds: 3
   - name: svc-lb-teh-2
-    host: 172.16.56.5
+    host: "172.16.56.5"
     weight: "1"
     probe:
       failureThreshold: 10 #
       httpGet:
-        host: http://172.16.56.5
+        host: "172.16.56.5"
         path: /
         port: 80 #
-        scheme: HTTP #
+        scheme: http #
       initialDelaySeconds: 3 #
       periodSeconds: 5
       successThreshold: 1 #
