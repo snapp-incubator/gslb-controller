@@ -45,7 +45,7 @@ spec:
                       type: string
                     probe:
                       description: Probe describes a health check to be performed
-                        against a container to determine whether it is alive or ready
+                        against a backend to determine whether it is alive or ready
                         to receive traffic.
                       properties:
                         exec:
@@ -66,10 +66,11 @@ spec:
                               type: array
                           type: object
                         failureThreshold:
+                          default: 3
                           description: Minimum consecutive failures for the probe
-                            to be considered failed after having succeeded. Defaults
-                            to 3. Minimum value is 1.
+                            to be considered failed after having succeeded.
                           format: int32
+                          minimum: 1
                           type: integer
                         httpGet:
                           description: HTTPGet specifies the http request to perform.
@@ -98,40 +99,36 @@ spec:
                                 type: object
                               type: array
                             path:
+                              default: /
                               description: Path to access on the HTTP server.
                               type: string
                             port:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: Name or number of the port to access on
-                                the container. Number must be in the range 1 to 65535.
-                                Name must be an IANA_SVC_NAME.
-                              x-kubernetes-int-or-string: true
+                              description: Number of the port to access in healthcheck
+                                probe.
+                              format: int32
+                              maximum: 65535
+                              minimum: 0
+                              type: integer
                             scheme:
+                              default: http
                               description: Scheme to use for connecting to the host.
-                                Defaults to HTTP.
+                              enum:
+                              - http
+                              - https
                               type: string
-                          required:
-                          - port
                           type: object
-                        initialDelaySeconds:
-                          description: 'Number of seconds after the container has
-                            started before liveness probes are initiated. More info:
-                            https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes'
-                          format: int32
-                          type: integer
                         periodSeconds:
+                          default: 10
                           description: How often (in seconds) to perform the probe.
-                            Default to 10 seconds. Minimum value is 1.
                           format: int32
+                          minimum: 1
                           type: integer
                         successThreshold:
+                          default: 1
                           description: Minimum consecutive successes for the probe
-                            to be considered successful after having failed. Defaults
-                            to 1. Must be 1 for liveness and startup. Minimum value
-                            is 1.
+                            to be considered successful after having failed.
                           format: int32
+                          minimum: 1
                           type: integer
                         tcpSocket:
                           description: 'TCPSocket specifies an action involving a
@@ -143,30 +140,27 @@ spec:
                                 to the pod IP.'
                               type: string
                             port:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              description: Number or name of the port to access on
-                                the container. Number must be in the range 1 to 65535.
-                                Name must be an IANA_SVC_NAME.
-                              x-kubernetes-int-or-string: true
-                          required:
-                          - port
+                              description: Number of the port to access in healthcheck
+                                probe.
+                              format: int32
+                              minimum: 65535
+                              type: integer
                           type: object
                         timeoutSeconds:
-                          description: 'Number of seconds after which the probe times
-                            out. Defaults to 1 second. Minimum value is 1. More info:
-                            https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes'
+                          default: 3
+                          description: Number of seconds after which the probe times
+                            out.
                           format: int32
+                          minimum: 1
                           type: integer
                       type: object
                     weight:
                       type: string
                   type: object
+                maxItems: 10
                 type: array
               serviceName:
-                description: Foo is an example field of Gslb. Edit gslb_types.go to
-                  remove/update
+                description: ServiceName for Gslb. The fullname will be ServiceName.service.ha
                 type: string
             type: object
           status:

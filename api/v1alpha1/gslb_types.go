@@ -25,19 +25,25 @@ import (
 
 // GslbSpec defines the desired state of Gslb
 type GslbSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Gslb. Edit gslb_types.go to remove/update
-	ServiceName string    `json:"serviceName,omitempty"`
-	Backends    []Backend `json:"backends,omitempty"`
+	// ServiceName for Gslb. The fullname will be ServiceName.service.ha
+	// +kubebuilder:validation:Required
+	ServiceName string `json:"serviceName,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxItems:=10
+	Backends []Backend `json:"backends,omitempty"`
 }
 
 type Backend struct {
-	Name   string `json:"name,omitempty"`
-	Host   string `json:"host,omitempty"`
+	// +kubebuilder:validation:Required
+	Name string `json:"name,omitempty"`
+	// +kubebuilder:validation:Required
+	Host string `json:"host,omitempty"`
+	// +kubebuilder:validation:Required
 	Weight string `json:"weight,omitempty"`
-	Probe  Probe  `json:"probe,omitempty"`
+	// +kubebuilder:validation:Optional
+	Probe Probe `json:"probe,omitempty"`
 }
 
 // GslbStatus defines the observed state of Gslb
@@ -53,9 +59,8 @@ type GslbStatus struct {
 type Gslb struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   GslbSpec   `json:"spec,omitempty"`
-	Status GslbStatus `json:"status,omitempty"`
+	Spec              GslbSpec   `json:"spec,omitempty"`
+	Status            GslbStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

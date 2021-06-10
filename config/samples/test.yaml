@@ -1,0 +1,76 @@
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+spec:
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+spec:
+  serviceName: hello
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+spec:
+  serviceName: hello
+  backends:
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+spec:
+  serviceName: hello
+  # strategy: roundrobin, failover
+  backends:
+  - name: private-teh-1
+    host: spcld-health2-be.apps.private.teh-1.snappcloud.io
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+spec:
+  serviceName: hello
+  # strategy: roundrobin, failover
+  backends:
+  - name: private-teh-1
+    host: spcld-health2-be.apps.private.teh-1.snappcloud.io
+    weight: "1" # TODO: implement logic
+    probe:
+      periodSeconds: 5
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
+  name: gslb-sample
+  namespace: abar-internal
+spec:
+  serviceName: hello
+  # strategy: roundrobin, failover
+  backends:
+  - name: private-teh-1
+    host: spcld-health2-be.apps.private.teh-1.snappcloud.io
+    weight: "1" # TODO: implement logic
+    probe:
+      httpGet:
+        host: "spcld-health2-be.apps.private.teh-1.snappcloud.io" # (optional) default to .spec.backends[].host
+        path: / # (optional) default to "/"
+        port: 80 # (optional) default based on scheme: 80 for http, 443 for https
+        scheme: http # (optional) valid values: ["http", "http", "httpS", "https"], default to http
+      periodSeconds: 5
