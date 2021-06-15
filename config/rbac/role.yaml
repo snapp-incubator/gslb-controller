@@ -9,6 +9,32 @@ rules:
 - apiGroups:
   - gslb.snappcloud.io
   resources:
+  - gslbcontents
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - gslb.snappcloud.io
+  resources:
+  - gslbcontents/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - gslb.snappcloud.io
+  resources:
+  - gslbcontents/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - gslb.snappcloud.io
+  resources:
   - gslbs
   verbs:
   - create

@@ -19,6 +19,7 @@ package main
 import (
 	"flag"
 	"os"
+	"time"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -37,8 +38,9 @@ import (
 )
 
 var (
-	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	scheme     = runtime.NewScheme()
+	setupLog   = ctrl.Log.WithName("setup")
+	syncPeriod = 4 * time.Hour
 )
 
 func init() {
@@ -72,6 +74,7 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "0865a5bd.snappcloud.io",
+		SyncPeriod:             &syncPeriod,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
@@ -83,6 +86,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Gslb")
+		os.Exit(1)
+	}
+	if err = (&controllers.GslbContentReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "GslbContent")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

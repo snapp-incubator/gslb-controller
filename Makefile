@@ -35,8 +35,9 @@ IMAGE_TAG_BASE ?= snappcloud.io/gslb-controller
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
 BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
 
+REG = registry.okd4.teh-1.snappcloud.io
 # Image URL to use all building/pushing image targets
-IMG ?= registry.okd4.teh-1.snappcloud.io/public-reg/gslb-controller:latest
+IMG ?= ${REG}/public-reg/gslb-controller:latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 
@@ -108,6 +109,11 @@ docker-build: test ## Build docker image with the manager.
 docker-push: ## Push docker image with the manager.
 	sudo podman push ${IMG}
 
+docker-login:
+	sudo podman login ${REG} -u ${REG_USER} -p ${REG_PASSWORD}
+
+redeploy: docker-build docker-login docker-push
+	oc delete po --all -n gslb-controller-system
 ##@ Deployment
 
 install: manifests kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
