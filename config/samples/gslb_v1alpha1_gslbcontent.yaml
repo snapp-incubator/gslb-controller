@@ -1,0 +1,7 @@
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: GslbContent
+metadata:
+  name: gslbcontent-sample
+spec:
+  # Add fields here
+  foo: bar

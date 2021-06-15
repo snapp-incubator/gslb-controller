@@ -1,4 +1,5 @@
 ## Append samples you want in your CSV to this file as resources ##
 resources:
 - gslb_v1alpha1_gslb.yaml
+- gslb_v1alpha1_gslbcontent.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

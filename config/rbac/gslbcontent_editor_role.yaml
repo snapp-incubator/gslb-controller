@@ -1,0 +1,24 @@
+# permissions for end users to edit gslbcontents.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gslbcontent-editor-role
+rules:
+- apiGroups:
+  - gslb.snappcloud.io
+  resources:
+  - gslbcontents
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - gslb.snappcloud.io
+  resources:
+  - gslbcontents/status
+  verbs:
+  - get
