@@ -1,7 +1,22 @@
 apiVersion: gslb.snappcloud.io/v1alpha1
 kind: GslbContent
 metadata:
-  name: gslbcontent-sample
+  name: gslbcon-sample
 spec:
-  # Add fields here
-  foo: bar
+  # driverName:        # learn.internal.ha.snppacloud.io # learn.public.
+  serviceName: learn
+  backend:
+    name: private-teh-1
+    host: spcld-health2-be.apps.private.teh-1.snappcloud.io
+    weight: "1" # TODO: implement logic
+    probe:
+      httpGet:
+        host: "spcld-health2-be.apps.private.teh-1.snappcloud.io" # (optional) default to .spec.backends[].host
+        path: / # (optional) default to "/"
+        port: 80 # (optional) default based on scheme: 80 for http, 443 for https
+        scheme: http # (optional) valid values: ["http", "http", "httpS", "https"], default to http
+      periodSeconds: 5
+      timeoutSeconds: 3
+      initialDelaySeconds: 3 # TODO: implement logic: start critical?
+      failureThreshold: 3
+      successThreshold: 1

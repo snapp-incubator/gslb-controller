@@ -43,9 +43,8 @@ type GslbReconciler struct {
 }
 
 const (
-	gslbFinalizer        = "gslb.snappcloud.io/gslb-finalizer"
-	gslbContentFinalizer = "gslb.snappcloud.io/gslbcontent-finalizer"
-	prefix               = "gslb"
+	gslbFinalizer = "gslb.snappcloud.io/gslb-finalizer"
+	prefix        = "gslb"
 )
 
 //+kubebuilder:rbac:groups=gslb.snappcloud.io,resources=gslbs,verbs=get;list;watch;create;update;patch;delete
@@ -64,7 +63,7 @@ const (
 func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := ctrllog.FromContext(ctx)
 
-	// Lookup the route instance for this reconcile request
+	// Lookup the gslb instance for this reconcile request
 	gslb := &gslbv1alpha1.Gslb{}
 	err := r.Get(ctx, req.NamespacedName, gslb)
 	if err != nil {
@@ -76,7 +75,7 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 			return ctrl.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
-		log.Error(err, "Failed to get Routes")
+		log.Error(err, "Failed to get Gslb")
 		return ctrl.Result{}, err
 	}
 	// Check if the gslb instance is marked to be deleted, which is
@@ -96,10 +95,12 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		if err != nil {
 			return ctrl.Result{}, err
 		}
+		return ctrl.Result{}, nil
 	}
 
 	// Add finalizer for this CR
 	if !controllerutil.ContainsFinalizer(gslb, gslbFinalizer) {
+		log.Info("Add finalizer to gslb", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 		controllerutil.AddFinalizer(gslb, gslbFinalizer)
 		err = r.Update(ctx, gslb)
 		if err != nil {
@@ -127,7 +128,7 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		// e.g.
 		// gslbContentList := &gslbv1alpha1.GslbContentList{}
 		// listOpts := []client.ListOption{
-		// 	client.MatchingLabels(labelsForGsbl(string(gslb.GetUID()))),
+		// 	client.MatchingLabels(labelsForGslbcon(string(gslb.GetUID()))),
 		// }
 
 		// if err = r.List(ctx, gslbContentList, listOpts...); err != nil {
@@ -165,7 +166,7 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	// Check gslbContents which refrence this Gslb, and delete extra GslbContents
 	gslbContentList := &gslbv1alpha1.GslbContentList{}
 	listOpts := []client.ListOption{
-		client.MatchingLabels(labelsForGsbl(gslb.Name, gslb.Namespace)),
+		client.MatchingLabels(labelsForGslbcon(gslb.Name, gslb.Namespace)),
 	}
 
 	if err = r.List(ctx, gslbContentList, listOpts...); err != nil {
@@ -213,7 +214,7 @@ func (r *GslbReconciler) finalizeGslb(ctx context.Context, log logr.Logger, gslb
 	// Check gslbContents which refrence this Gslb, and delete them
 	gslbContentList := &gslbv1alpha1.GslbContentList{}
 	listOpts := []client.ListOption{
-		client.MatchingLabels(labelsForGsbl(gslb.Name, gslb.Namespace)),
+		client.MatchingLabels(labelsForGslbcon(gslb.Name, gslb.Namespace)),
 	}
 
 	if err := r.List(ctx, gslbContentList, listOpts...); err != nil {
@@ -235,27 +236,24 @@ func (r *GslbReconciler) finalizeGslb(ctx context.Context, log logr.Logger, gslb
 	return nil
 }
 
-// labelsForGslb returns the labels for selecting the resources
+// labelsForGslbcon returns the labels for selecting the resources
 // belonging to the given gslb CR name.
-func labelsForGsbl(gslbName, gslbNamespace string) map[string]string {
+func labelsForGslbcon(gslbName, gslbNamespace string) map[string]string {
 	return map[string]string{"gslbName": gslbName, "gslbNamespace": gslbNamespace}
 }
 
 func (r *GslbReconciler) createGslbconFromGsblbackend(gslb *gslbv1alpha1.Gslb, b gslbv1alpha1.Backend) (*gslbv1alpha1.GslbContent, error) {
 	gslbUID := string(gslb.GetUID())
-	// gslb UID label, if it was a required filed it was much better.
-	// or at least use OwnerRef UID instead.
-	// however it's harder / not optimized to query.
-	ls := labelsForGsbl(gslb.Name, gslb.Namespace)
+	ls := labelsForGslbcon(gslb.Name, gslb.Namespace)
 
 	gslbcon := &gslbv1alpha1.GslbContent{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   prefix + "-" + gslbUID + "-" + b.Name,
 			Labels: ls,
 		},
-		// TODO
 		Spec: gslbv1alpha1.GslbContentSpec{
-			Foo: b.Probe.HTTPGet.Host,
+			ServiceName: gslb.Spec.ServiceName,
+			Backend:     b,
 		},
 	}
 	// Set Gslb instance as the owner and controller of GslbContent
