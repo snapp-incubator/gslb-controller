@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 
 	"github.com/go-logr/logr"
@@ -256,8 +257,52 @@ func (r *GslbReconciler) createGslbconFromGsblbackend(gslb *gslbv1alpha1.Gslb, b
 			Backend:     b,
 		},
 	}
+	var err error
+	switch {
+	case b.Probe.HTTPGet != nil:
+		b.Probe.HTTPGet, err = httpProbe(context.TODO(), b)
+	case b.Probe.TCPSocket != nil:
+		b.Probe.TCPSocket, err = tcpProbe(context.TODO(), b)
+	case b.Probe.Exec != nil:
+		b.Probe.Exec, err = execProbe(context.TODO(), b)
+	default:
+		return nil, fmt.Errorf("at least one check type must be specified: [\"httpGet\",\"exec\",\"tcpSocket\"]")
+	}
+	if err != nil {
+		return nil, err
+	}
 	// Set Gslb instance as the owner and controller of GslbContent
 	// cluster-scoped resource must not have a namespace-scoped owner
 	// err := ctrl.SetControllerReference(gslb, gslbcon, r.Scheme)
 	return gslbcon, nil
+}
+
+func httpProbe(ctx context.Context, b gslbv1alpha1.Backend) (*gslbv1alpha1.HTTPGetAction, error) {
+	httpGet := b.Probe.HTTPGet
+	if b.Probe.HTTPGet.Host == "" {
+		httpGet.Host = b.Host
+	}
+	if b.Probe.HTTPGet.Port == 0 {
+		switch b.Probe.HTTPGet.Scheme {
+		case "http":
+			httpGet.Port = 80
+		case "https":
+			httpGet.Port = 443
+		default:
+			return nil, fmt.Errorf("invalide httpProbe scheme: %v", b.Probe.HTTPGet.Scheme)
+		}
+	}
+	// header := make(map[string][]string)
+	// for _, h := range b.Probe.HTTPGet.HTTPHeaders {
+	// 	header[h.Name] = []string{h.Value}
+	// }
+	return httpGet, nil
+}
+
+func tcpProbe(ctx context.Context, b gslbv1alpha1.Backend) (*gslbv1alpha1.TCPSocketAction, error) {
+	return &gslbv1alpha1.TCPSocketAction{}, nil
+}
+
+func execProbe(ctx context.Context, b gslbv1alpha1.Backend) (*gslbv1alpha1.ExecAction, error) {
+	return &gslbv1alpha1.ExecAction{}, nil
 }

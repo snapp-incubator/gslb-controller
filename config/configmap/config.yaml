@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: driver-config
+  namespace: gslb-controller-system
+data:
+  config.yaml: |
+    v: 3
+    grpcAddress: "unix://Users/my/gitlab/consul-gslb-driver/socket" # --grpcAddress
+    consulConfig:
+      scheme: "http"
+      datacenter: "teh1"
+      address: "consul.apps.private.okd4.teh-1.snappcloud.io"
+    metricServer:
+      ip: "127.0.0.1"
+      port: 9876 # --metrics-port
+      path: "/metrics"
+
