@@ -104,12 +104,12 @@ func (r *GslbContentReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 
 	// Sync the gslbcontent with driver
 	log.Info("Sync gslbcontent with driver", "GslbContent.Name", gslbcon.Name)
-	err = CreateGslbcon(ctx, gslbcon)
+	id, _, err := grpcClient.CreateGslbcon(ctx, gslbcon)
 	if err != nil {
 		log.Error(err, "Failed to sync gslbcontent with driver", "GslbContent.Name", gslbcon.Name)
 		return ctrl.Result{}, err
 	}
-	log.Info("Succesfully synced gslbcontent with driver")
+	log.Info("Succesfully synced gslbcontent with driver", "Consul.ServiceID", id)
 	return ctrl.Result{}, nil
 }
 
@@ -122,7 +122,7 @@ func (r *GslbContentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *GslbContentReconciler) finalizeGslbcon(ctx context.Context, reqLogger logr.Logger, gslbcon *gslbv1alpha1.GslbContent) error {
 	reqLogger.Info("Deleting the gslbcontent with driver", "GslbContent.Name", gslbcon.Name)
-	err := DeleteGslbcon(ctx, gslbcon)
+	err := grpcClient.DeleteGslbcon(ctx, gslbcon)
 	if err != nil {
 		reqLogger.Error(err, "Failed to delete the gslbcontent", "GslbContent.Name", gslbcon.Name)
 		return err

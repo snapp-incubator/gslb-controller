@@ -17,30 +17,41 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 	"time"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
+	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
+	"github.com/snapp-cab/gslb-controller/controllers"
+	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/connection"
+	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/rpc"
+	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
-	"github.com/snapp-cab/gslb-controller/controllers"
 	//+kubebuilder:scaffold:imports
+)
+
+const (
+	// Default timeout of short GSLBI calls like GetPluginInfo
+	gslbiTimeout = time.Second
+	gslbiAddress = "/var/run/gslbi/gslbi.sock" // Address of the GSLBI driver socket.
+	// timeout      = "15*time.Second"                             // Timeout for waiting for creating or deleting the gslb."
 )
 
 var (
 	scheme     = runtime.NewScheme()
 	setupLog   = ctrl.Log.WithName("setup")
 	syncPeriod = 4 * time.Hour
+	timeout    = flag.Duration("timeout", 15*time.Second, "Timeout for waiting for creating or deleting the gslb.")
 )
 
 func init() {
@@ -51,6 +62,33 @@ func init() {
 }
 
 func main() {
+	klog.InitFlags(nil)
+	// Connect to GSLBI.
+	gslbiConn, err := connection.Connect(gslbiAddress, []grpc.DialOption{}, connection.OnConnectionLoss(connection.ExitOnConnectionLoss()))
+	if err != nil {
+		klog.Error(err.Error())
+		os.Exit(1)
+	}
+	err = rpc.ProbeForever(gslbiConn, *timeout)
+	if err != nil {
+		klog.Error(err.Error())
+		os.Exit(1)
+	}
+
+	// Find driver name.
+	ctx, cancel := context.WithTimeout(context.Background(), gslbiTimeout)
+	defer cancel()
+	gslbiAttacher, err := rpc.GetDriverName(ctx, gslbiConn)
+	if err != nil {
+		klog.Error(err.Error())
+		os.Exit(1)
+	}
+	klog.V(2).Infof("gslbi driver name: %q", gslbiAttacher)
+
+	controllers.NewClient(gslbiConn)
+	// h.CreateGslbcon(ctx, &gslbv1alpha1.GslbContent{})
+	// time.Sleep(100 * time.Second)
+
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
