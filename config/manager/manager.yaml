@@ -29,7 +29,7 @@ spec:
         - /manager
         args:
         - --leader-elect
-        image: controller:latest
+        image: registry.okd4.teh-1.snappcloud.io/public-reg/gslb-controller:latest
         name: manager
         securityContext:
           allowPrivilegeEscalation: false
