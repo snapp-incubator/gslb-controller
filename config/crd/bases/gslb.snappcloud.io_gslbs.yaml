@@ -40,8 +40,13 @@ spec:
                 items:
                   properties:
                     host:
+                      format: hostname
+                      maxLength: 500
+                      minLength: 1
                       type: string
                     name:
+                      maxLength: 50
+                      minLength: 1
                       type: string
                     probe:
                       description: Probe describes a health check to be performed
@@ -156,12 +161,21 @@ spec:
                       type: object
                     weight:
                       type: string
+                  required:
+                  - host
+                  - name
                   type: object
                 maxItems: 10
+                minItems: 1
                 type: array
               serviceName:
                 description: ServiceName for Gslb. The fullname will be ServiceName.service.ha
+                maxLength: 50
+                minLength: 1
                 type: string
+            required:
+            - backends
+            - serviceName
             type: object
           status:
             description: GslbStatus defines the observed state of Gslb
