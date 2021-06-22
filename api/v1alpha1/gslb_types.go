@@ -25,22 +25,30 @@ import (
 
 // GslbSpec defines the desired state of Gslb
 type GslbSpec struct {
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// ServiceName for Gslb. The fullname will be ServiceName.service.ha
+	ServiceName ServiceName `json:"serviceName"`
 	// +kubebuilder:validation:Required
-	ServiceName string `json:"serviceName,omitempty"`
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems:=1
 	// +kubebuilder:validation:MaxItems:=10
-	Backends []Backend `json:"backends,omitempty"`
+	Backends []Backend `json:"backends"`
 }
+
+// ServiceName for Gslb. The fullname will be ServiceName.service.ha
+// +kubebuilder:validation:Required
+// +kubebuilder:validation:MinLength:=1
+// +kubebuilder:validation:MaxLength:=50
+type ServiceName string
 
 type Backend struct {
 	// +kubebuilder:validation:Required
-	Name string `json:"name,omitempty"`
+	// +kubebuilder:validation:MinLength:=1
+	// +kubebuilder:validation:MaxLength:=50
+	Name string `json:"name"`
 	// +kubebuilder:validation:Required
-	Host string `json:"host,omitempty"`
-	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength:=1
+	// +kubebuilder:validation:MaxLength:=500
+	// +kubebuilder:validation:Format:=hostname
+	Host string `json:"host"`
+	// +kubebuilder:validation:Optional
 	Weight string `json:"weight,omitempty"`
 	// +kubebuilder:validation:Optional
 	Probe Probe `json:"probe,omitempty"`

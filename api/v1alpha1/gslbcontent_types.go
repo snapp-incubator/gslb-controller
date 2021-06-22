@@ -25,14 +25,9 @@ import (
 
 // GslbContentSpec defines the desired state of GslbContent
 type GslbContentSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// ServiceName for Gslb. The fullname will be ServiceName.service.ha
+	ServiceName ServiceName `json:"serviceName"`
 	// +kubebuilder:validation:Required
-	ServiceName string `json:"serviceName,omitempty"`
-	// +kubebuilder:validation:Required
-	Backend Backend `json:"backend,omitempty"`
+	Backend Backend `json:"backend"`
 }
 
 // GslbContentStatus defines the observed state of GslbContent
