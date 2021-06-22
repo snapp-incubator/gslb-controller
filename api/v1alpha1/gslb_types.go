@@ -45,7 +45,8 @@ type Backend struct {
 	Name string `json:"name"`
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength:=1
-	// +kubebuilder:validation:MaxLength:=500
+	// DNS1123SubdomainMaxLength = 253
+	// +kubebuilder:validation:MaxLength:=253
 	// +kubebuilder:validation:Format:=hostname
 	Host string `json:"host"`
 	// +kubebuilder:validation:Optional
@@ -56,13 +57,17 @@ type Backend struct {
 
 // GslbStatus defines the observed state of Gslb
 type GslbStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// +kubebuilder:default:="Pending"
+	// +kubebuilder:validation:Enum:=Pending;Configured;Degraded;serviceNameAlreadyClaimed
+	State  string `json:"state,omitempty"`
+	Reason string `json:"reason,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
+// +kubebuilder:printcolumn:name="SERVICENAME",type=string,JSONPath=`.spec.serviceName`,description="Service Name of the GSLB"
+// +kubebuilder:printcolumn:name="STATE",type=string,JSONPath=`.status.state`,description="State of GSLB"
 // Gslb is the Schema for the gslbs API
 type Gslb struct {
 	metav1.TypeMeta   `json:",inline"`

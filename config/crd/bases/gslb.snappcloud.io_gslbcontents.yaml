@@ -39,8 +39,9 @@ spec:
               backend:
                 properties:
                   host:
+                    description: DNS1123SubdomainMaxLength = 253
                     format: hostname
-                    maxLength: 500
+                    maxLength: 253
                     minLength: 1
                     type: string
                   name:

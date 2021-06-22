@@ -38,7 +38,7 @@ func (c *creater) CreateGslbcon(ctx context.Context, gslbcon *gslbv1alpha1.GslbC
 	}
 	req := gslbi.CreateGSLBRequest{
 		Name:        gslbcon.Name,
-		ServiceName: gslbcon.Spec.ServiceName,
+		ServiceName: string(gslbcon.Spec.ServiceName),
 		Host:        gslbcon.Spec.Backend.Host,
 		Weight:      int32(w),
 		Parameters: map[string]string{
