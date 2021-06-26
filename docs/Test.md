@@ -10,8 +10,16 @@
 7. Reconcile: edit a gslbcontent, it should revert manual changes again.
 
 
+## Validation
 
-Bugs:
+1. duplicate backend name in one Gslb (on update, create)
+2. duplicate serviceName among two Gslb (on update, create)
+3. delete a serviceName should release it.
+4. rename a serviceName should add new, and release old.
 
-* why required on edit does not work? can delete required fields in CR, cause panic
-* duplicate names in backends, cause loop
+
+## Reliability
+
+1. take the controller down, when resources are already up.. nothing should break
+2. take the controller down, add/remove/edit resources: should not be possible
+3. take the controller down, even if manually edited (e.g. etcd, make validation: Ignore for some minutes): should not affect crazy and only services with issues (which e.g. uniqueness has been violated, etc) should be affected, not others.

@@ -24,8 +24,6 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
-	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
-	"github.com/snapp-cab/gslb-controller/controllers"
 	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/connection"
 	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/rpc"
 	"google.golang.org/grpc"
@@ -37,6 +35,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+
+	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
+	"github.com/snapp-cab/gslb-controller/controllers"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -86,8 +87,6 @@ func main() {
 	klog.V(2).Infof("gslbi driver name: %q", gslbiAttacher)
 
 	controllers.NewClient(gslbiConn)
-	// h.CreateGslbcon(ctx, &gslbv1alpha1.GslbContent{})
-	// time.Sleep(100 * time.Second)
 
 	var metricsAddr string
 	var enableLeaderElection bool
@@ -131,6 +130,10 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "GslbContent")
+		os.Exit(1)
+	}
+	if err = (&gslbv1alpha1.Gslb{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "Gslb")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

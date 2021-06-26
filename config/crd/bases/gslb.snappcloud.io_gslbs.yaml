@@ -49,8 +49,8 @@ spec:
                 items:
                   properties:
                     host:
-                      description: DNS1123SubdomainMaxLength = 253
-                      format: hostname
+                      description: DNS1123SubdomainMaxLength = 253 / kubebuilder:validation:Format:="hostname"
+                        / kubebuilder:validation:Format:="ipv4"
                       maxLength: 253
                       minLength: 1
                       type: string

@@ -96,6 +96,7 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		if err != nil {
 			return ctrl.Result{}, err
 		}
+		log.Info("Successfully deleted gslb", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 		return ctrl.Result{}, nil
 	}
 
@@ -124,18 +125,6 @@ func (r *GslbReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		desiredGslbconNames = append(desiredGslbconNames, gslbCon.Name)
 		// Check if Gslbcontents already exist for this Gslb, if not create missing ones
 		found = &gslbv1alpha1.GslbContent{}
-		// TODO: get by predictive name can be enhanced to get the list of gslbcon who has label/ownerRef of gslbUID
-		// and then loop over them to match a field such as backendName on them
-		// e.g.
-		// gslbContentList := &gslbv1alpha1.GslbContentList{}
-		// listOpts := []client.ListOption{
-		// 	client.MatchingLabels(labelsForGslbcon(string(gslb.GetUID()))),
-		// }
-
-		// if err = r.List(ctx, gslbContentList, listOpts...); err != nil {
-		// 	log.Error(err, "Failed to list gslbContents", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
-		// 	return ctrl.Result{}, err
-		// }
 		err = r.Get(ctx, types.NamespacedName{Name: gslbCon.Name, Namespace: ""}, found)
 		if err != nil && errors.IsNotFound(err) {
 
@@ -211,7 +200,7 @@ func (r *GslbReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *GslbReconciler) finalizeGslb(ctx context.Context, log logr.Logger, gslb *gslbv1alpha1.Gslb) error {
-	log.Info("Deleting the gslb", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
+	log.Info("Finalizing the gslb", "Gslb.Namespace", gslb.Namespace, "Gslb.Name", gslb.Name)
 	// Check gslbContents which refrence this Gslb, and delete them
 	gslbContentList := &gslbv1alpha1.GslbContentList{}
 	listOpts := []client.ListOption{
@@ -233,7 +222,7 @@ func (r *GslbReconciler) finalizeGslb(ctx context.Context, log logr.Logger, gslb
 		}
 	}
 
-	log.Info("Successfully deleted and finalized gslb")
+	log.Info("Successfully finalized gslb")
 	return nil
 }
 
@@ -249,7 +238,7 @@ func (r *GslbReconciler) createGslbconFromGsblbackend(gslb *gslbv1alpha1.Gslb, b
 
 	gslbcon := &gslbv1alpha1.GslbContent{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   prefix + "-" + gslbUID + "-" + b.Name,
+			Name:   prefix + "-" + string(gslb.Spec.ServiceName) + "-" + gslbUID + "-" + b.Name,
 			Labels: ls,
 		},
 		Spec: gslbv1alpha1.GslbContentSpec{
