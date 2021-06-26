@@ -47,7 +47,8 @@ type Backend struct {
 	// +kubebuilder:validation:MinLength:=1
 	// DNS1123SubdomainMaxLength = 253
 	// +kubebuilder:validation:MaxLength:=253
-	// +kubebuilder:validation:Format:=hostname
+	/// kubebuilder:validation:Format:="hostname"
+	/// kubebuilder:validation:Format:="ipv4"
 	Host string `json:"host"`
 	// +kubebuilder:validation:Optional
 	Weight string `json:"weight,omitempty"`
