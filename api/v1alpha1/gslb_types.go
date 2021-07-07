@@ -32,6 +32,13 @@ type GslbSpec struct {
 	Backends []Backend `json:"backends"`
 }
 
+func (g *GslbSpec) GetBackends() []Backend {
+	if g.Backends != nil {
+		return g.Backends
+	}
+	return []Backend{}
+}
+
 // ServiceName for Gslb. The fullname will be ServiceName.service.ha
 // +kubebuilder:validation:Required
 // +kubebuilder:validation:MinLength:=1

@@ -20,8 +20,8 @@ spec:
       periodSeconds: 5
       timeoutSeconds: 3
       initialDelaySeconds: 3 # TODO: implement logic: start critical?
-      failureThreshold: 3
-      successThreshold: 1
+      failureThreshold: 3 # TODO
+      successThreshold: 1 # TODO
       # clusterRef: cluster-okd4-teh-1 // another CRD for external cluster
 
 

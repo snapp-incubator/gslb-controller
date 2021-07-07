@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/go-logr/logr v0.4.0
-	github.com/m-yosefpor/utils v0.0.0-20210615070532-0c1a69706358
+	github.com/m-yosefpor/utils v0.0.0-20210703235507-8b7d90bca5db
 	github.com/onsi/ginkgo v1.14.1
 	github.com/onsi/gomega v1.10.2
 	gitlab.snapp.ir/snappcloud/consul-gslb-driver v1.2.0

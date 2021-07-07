@@ -36,6 +36,11 @@ func (c *creater) CreateGslbcon(ctx context.Context, gslbcon *gslbv1alpha1.GslbC
 	if err != nil {
 		return "", false, fmt.Errorf("invalid value for weight: %v, %w", gslbcon.Spec.Backend.Weight, err)
 	}
+
+	// TODO
+	if gslbcon.Spec.Backend.Probe.HTTPGet == nil {
+		return "", false, fmt.Errorf("Only HTTPGet is supported")
+	}
 	req := gslbi.CreateGSLBRequest{
 		Name:        gslbcon.Name,
 		ServiceName: string(gslbcon.Spec.ServiceName),
