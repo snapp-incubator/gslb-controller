@@ -10,7 +10,7 @@ data:
     consulConfig:
       scheme: "http"
       datacenter: "teh1"
-      address: "consul.apps.private.okd4.teh-1.snappcloud.io"
+      address: "consul-ui.consul.svc.cluster.local"
     metricServer:
       ip: "127.0.0.1"
       port: 9876 # --metrics-port
