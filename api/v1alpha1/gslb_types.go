@@ -58,6 +58,7 @@ type Backend struct {
 	/// kubebuilder:validation:Format:="ipv4"
 	Host string `json:"host"`
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:="1"
 	Weight string `json:"weight,omitempty"`
 	// +kubebuilder:validation:Optional
 	Probe Probe `json:"probe,omitempty"`

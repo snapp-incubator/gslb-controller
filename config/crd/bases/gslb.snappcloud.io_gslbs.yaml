@@ -170,6 +170,7 @@ spec:
                           type: integer
                       type: object
                     weight:
+                      default: "1"
                       type: string
                   required:
                   - host

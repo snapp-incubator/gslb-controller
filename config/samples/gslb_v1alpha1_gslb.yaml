@@ -1,6 +1,27 @@
 apiVersion: gslb.snappcloud.io/v1alpha1
 kind: Gslb
 metadata:
+  name: gslb-simplest
+  namespace: your-namespace
+spec:
+  serviceName: sth # URL would be `sth.app.internal.ha.snappcloud.io`
+  backends:
+  - name: inter-dc-teh-1
+    host: sth.apps.inter-dc.teh-1.snappcloud.io
+    probe:
+      httpGet: {}
+  - name: private-teh-2
+    host: sth.apps.private.teh-1.snappcloud.io
+    probe:
+      httpGet: {}
+  - name: svc-lb-teh-1
+    host: "172.21.56.15"
+    probe:
+      httpGet: {}
+---
+apiVersion: gslb.snappcloud.io/v1alpha1
+kind: Gslb
+metadata:
   name: gslb-sample
   namespace: abar-internal
 spec:
