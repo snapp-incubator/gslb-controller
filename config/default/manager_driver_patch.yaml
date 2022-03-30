@@ -14,7 +14,7 @@ spec:
           - name: socket-dir
             mountPath: /var/run/gslbi/
       - name: driver
-        image: registry.okd4.teh-1.snappcloud.io/public-reg/consul-gslb-driver:latest
+        image: docker.io/spc35771/consul-gslb-driver
         imagePullPolicy: Always
         args:
         - "start"
