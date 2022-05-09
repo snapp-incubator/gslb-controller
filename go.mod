@@ -7,7 +7,7 @@ require (
 	github.com/m-yosefpor/utils v0.0.0-20210703235507-8b7d90bca5db
 	github.com/onsi/ginkgo v1.14.1
 	github.com/onsi/gomega v1.10.2
-	gitlab.snapp.ir/snappcloud/consul-gslb-driver v1.2.0
+	github.com/snapp-incubator/consul-gslb-driver v1.2.0
 	google.golang.org/grpc v1.38.0
 	k8s.io/api v0.20.2
 	k8s.io/apimachinery v0.20.2

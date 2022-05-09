@@ -24,8 +24,8 @@ import (
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
-	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/connection"
-	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/rpc"
+	"github.com/snapp-incubator/consul-gslb-driver/pkg/connection"
+	"github.com/snapp-incubator/consul-gslb-driver/pkg/rpc"
 	"google.golang.org/grpc"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"

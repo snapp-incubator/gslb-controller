@@ -25,8 +25,8 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/connection"
-	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/rpc"
+	"github.com/snapp-incubator/consul-gslb-driver/pkg/connection"
+	"github.com/snapp-incubator/consul-gslb-driver/pkg/rpc"
 	"google.golang.org/grpc"
 	"k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"

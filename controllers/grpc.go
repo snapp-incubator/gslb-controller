@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	gslbv1alpha1 "github.com/snapp-cab/gslb-controller/api/v1alpha1"
-	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/connection"
-	"gitlab.snapp.ir/snappcloud/consul-gslb-driver/pkg/gslbi"
+	"github.com/snapp-incubator/consul-gslb-driver/pkg/connection"
+	"github.com/snapp-incubator/consul-gslb-driver/pkg/gslbi"
 	"google.golang.org/grpc"
 )
 
