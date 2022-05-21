@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/go-logr/logr v0.4.0
 	github.com/m-yosefpor/utils v0.0.0-20210703235507-8b7d90bca5db
-	github.com/onsi/ginkgo v1.14.1
+	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.10.2
 	github.com/snapp-incubator/consul-gslb-driver v1.2.0
 	google.golang.org/grpc v1.38.0
@@ -45,7 +45,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/nxadm/tail v1.4.4 // indirect
+	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.11.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
