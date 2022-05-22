@@ -41,6 +41,7 @@ func (c *creater) CreateGslbcon(ctx context.Context, gslbcon *gslbv1alpha1.GslbC
 	if gslbcon.Spec.Backend.Probe.HTTPGet == nil {
 		return "", false, fmt.Errorf("Only HTTPGet is supported")
 	}
+	fullProbeAddress := net.JoinHostPort(gslbcon.Spec.Backend.Probe.HTTPGet.Host, strconv.Itoa(gslbcon.Spec.Backend.Probe.HTTPGet.Port))
 	req := gslbi.CreateGSLBRequest{
 		Name:        gslbcon.Name,
 		ServiceName: string(gslbcon.Spec.ServiceName),
@@ -50,7 +51,7 @@ func (c *creater) CreateGslbcon(ctx context.Context, gslbcon *gslbv1alpha1.GslbC
 			"probe_timeout":  strconv.Itoa(int(gslbcon.Spec.Backend.Probe.TimeoutSeconds)),
 			"probe_interval": strconv.Itoa(int(gslbcon.Spec.Backend.Probe.PeriodSeconds)),
 			"probe_scheme":   gslbcon.Spec.Backend.Probe.HTTPGet.Scheme,
-			"probe_address":  gslbcon.Spec.Backend.Probe.HTTPGet.Host,
+			"probe_address":  fullProbeAddress,
 		},
 	}
 
