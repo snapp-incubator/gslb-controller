@@ -3,7 +3,7 @@ module github.com/snapp-cab/gslb-controller
 go 1.18
 
 require (
-	github.com/go-logr/logr v1.2.0
+	github.com/go-logr/logr v1.2.3
 	github.com/m-yosefpor/utils v0.0.0-20210703235507-8b7d90bca5db
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0
