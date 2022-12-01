@@ -6,11 +6,11 @@ require (
 	github.com/go-logr/logr v1.2.3
 	github.com/m-yosefpor/utils v0.0.0-20210703235507-8b7d90bca5db
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.19.0
+	github.com/onsi/gomega v1.20.1
 	github.com/snapp-incubator/consul-gslb-driver v1.2.0
 	google.golang.org/grpc v1.48.0
 	k8s.io/api v0.25.0
-	k8s.io/apimachinery v0.25.0
+	k8s.io/apimachinery v0.25.4
 	k8s.io/client-go v0.25.0
 	k8s.io/klog/v2 v2.70.1
 	sigs.k8s.io/controller-runtime v0.13.0
